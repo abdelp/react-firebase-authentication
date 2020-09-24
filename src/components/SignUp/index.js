@@ -25,13 +25,42 @@ function SignUpForm(props) {
 
   }
 
-  const onChange = event => {
-
-  }
+  const onChange = event =>
+    setState(state => ({ ...state, [event.target.name]: event.target.value }));
 
   return (
     <form onSubmit={onSubmit}>
+      <input
+        name="username"
+        value={state.username}
+        onChange={onChange}
+        type="text"
+        placeholder="Full Name"
+      />
+      <input
+        name="email"
+        value={state.email}
+        onChange={onChange}
+        type="text"
+        placeholder="Email Address"
+      />
+      <input
+        name="password"
+        value={state.password}
+        onChange={onChange}
+        type="password"
+        placeholder="Password"
+      />
+      <input
+        name="passwordConfirmation"
+        value={state.passwordConfirmation}
+        onChange={onChange}
+        type="password"
+        placeholder="Confirm Password"
+      />
+      <button type="submit">Sign Up</button>
 
+      {state.error && <p>{state.error.message}</p>}
     </form>
   );
 }
