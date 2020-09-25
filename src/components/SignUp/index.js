@@ -27,18 +27,19 @@ const SignUpFormBase = (props) => {
     const { username, email, password } = state;
 
     props.firebase
-         .createUserWithEmailAndPassword(email, password)
-         .then(authUser => {
-            setState({...INITIAL_STATE})
-            props.history.push(ROUTES.HOME);
-         })
-         .catch(error =>
-            setState({ error })
-         );
+      .createUserWithEmailAndPassword(email, password)
+      .then(authUser => {
+        setState({...INITIAL_STATE})
+        props.history.push(ROUTES.HOME);
+      })
+      .catch(error =>
+        setState({ error })
+      );
+
     event.preventDefault();
   }
 
-  const onChange = (e) => {
+  const onChange = e => {
     e.persist();
     setState(
       state => ({ ...state, [e.target.name]: e.target.value })
