@@ -25,8 +25,18 @@ function SignUpForm(props) {
 
   }
 
-  const onChange = event =>
-    setState(state => ({ ...state, [event.target.name]: event.target.value }));
+  const onChange = (e) => {
+    e.persist();
+    setState(
+      state => ({ ...state, [e.target.name]: e.target.value })
+    );
+  };
+
+  const isInvalid =
+    state.password !== state.passwordConfirmation ||
+    !state.password ||
+    !state.email ||
+    !state.username;
 
   return (
     <form onSubmit={onSubmit}>
@@ -58,7 +68,7 @@ function SignUpForm(props) {
         type="password"
         placeholder="Confirm Password"
       />
-      <button type="submit">Sign Up</button>
+      <button type="submit" disabled={isInvalid}>Sign Up</button>
 
       {state.error && <p>{state.error.message}</p>}
     </form>
