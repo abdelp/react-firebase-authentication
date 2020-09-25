@@ -1,12 +1,15 @@
 import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { FirebaseContext } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 const SignUpPage = () => (
   <div>
     <h1>SignUp</h1>
-    <SignUpForm />
+    <FirebaseContext.Consumer>
+      {firebase => <SignUpForm firebase={firebase} />}
+    </FirebaseContext.Consumer>
   </div>
 );
 
@@ -22,7 +25,18 @@ function SignUpForm(props) {
   const [state, setState] = useState({...INITIAL_STATE});
 
   const onSubmit = event => {
+    const { username, email, password } = state;
 
+    props.firebase
+         .createUserWithEmailAndPassword(email, password)
+         .then(authUser =>
+            setState({...INITIAL_STATE})
+          )
+         .catch(error => {
+           console.log(error);
+            setState({ error })
+         });
+    event.preventDefault();
   }
 
   const onChange = (e) => {
