@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -14,38 +14,27 @@ import AccountPage from '../Account';
 import AdminPage from '../Admin';
 
 import * as ROUTES from '../../constants/routes';
+import { withAuthentication } from '../Session';
 import { defaultProps } from 'recompose';
 import { withFirebase } from '../Firebase';
 import { auth } from 'firebase';
+import { AuthUserContext } from '../Session'; // ??
 
-const App = (props) => {
-  const [state, setState] = useState({authUser: null});
-  const [listener, setListener] = useState();
+const App = () => (
+  <Router>
+    <div>
+      <Navigation />
+      <hr />
 
-  useEffect(() => {
-    const authListener = props.firebase.auth.onAuthStateChanged(
-      authUser =>
-        setState(state => ({...state, authUser}))
-    );
-    return () => authListener();
-  }, []);
+      <Route exact path={ROUTES.LANDING} component={LandingPage} />
+      <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+      <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+      <Route path={ROUTES.HOME} component={HomePage} />
+      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+      <Route path={ROUTES.ADMIN} component={AdminPage} />
+    </div>
+  </Router>
+);
 
-  return (
-    <Router>
-      <div>
-        <Navigation authUser={state.authUser} />
-        <hr />
-
-        <Route exact path={ROUTES.LANDING} component={LandingPage} />
-        <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-        <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-        <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-        <Route path={ROUTES.HOME} component={HomePage} />
-        <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-        <Route path={ROUTES.ADMIN} component={AdminPage} />
-      </div>
-    </Router>
-  );
-}
- 
-export default withFirebase(App);
+export default withAuthentication(App);
