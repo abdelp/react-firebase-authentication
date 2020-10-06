@@ -20,7 +20,7 @@ const INITIAL_STATE = {
   error: null,
 };
 
-const SignUpFormBase = (props) => {
+const SignUpFormBase = props => {
   const [state, setState] = useState({ ...INITIAL_STATE });
 
   const onSubmit = event => {
