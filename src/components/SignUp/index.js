@@ -21,7 +21,7 @@ const INITIAL_STATE = {
 };
 
 const SignUpFormBase = (props) => {
-  const [state, setState] = useState({...INITIAL_STATE});
+  const [state, setState] = useState({ ...INITIAL_STATE });
 
   const onSubmit = event => {
     const { username, email, password } = state;
@@ -38,11 +38,13 @@ const SignUpFormBase = (props) => {
                 });
       })
       .then(() => {
-        setState({...INITIAL_STATE})
+        setState({ ...INITIAL_STATE })
         props.history.push(ROUTES.HOME);
       })
       .catch(error =>
-        setState({ error })
+        setState(
+          state => ({ ...state, error })
+        )
       );
 
     event.preventDefault();
