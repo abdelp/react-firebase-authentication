@@ -10,14 +10,14 @@ const PasswordForgetPage = () => (
     <PasswordForgetForm />
   </div>
 );
- 
+
 const INITIAL_STATE = {
   email: '',
   error: null,
 };
 
-const PasswordForgetFormBase = (props) => {
-  const [state, setState] = useState({ ...INITIAL_STATE});
+const PasswordForgetFormBase = props => {
+  const [state, setState] = useState({ ...INITIAL_STATE });
 
   const onSubmit = event => {
     const { email } = state;
@@ -27,18 +27,13 @@ const PasswordForgetFormBase = (props) => {
     props
       .firebase
       .resetPassword(email)
-      .then(() =>
-        setState({ ...INITIAL_STATE})
-      )
-      .catch(error =>
-        setState(state => ({ ...state, error })  
-      ));
+      .then(() => setState({ ...INITIAL_STATE }))
+      .catch(error => setState(state => ({ ...state, error })));
 
     event.preventDefault();
   };
 
-  const onChange = event =>
-    setState(state => ({ ...state, [event.target.name]: event.target.value }));
+  const onChange = event => setState(state => ({ ...state, [event.target.name]: event.target.value }));
 
   const isInvalid = state.email === '';
 

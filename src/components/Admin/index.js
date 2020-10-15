@@ -5,27 +5,26 @@ import * as ROLES from '../../constants/roles';
 import { withFirebase } from '../Firebase';
 
 const AdminPage = props => {
-  const [state, setState] = useState({loading: false, users: []});
+  const [state, setState] = useState({ loading: false, users: [] });
 
   useEffect(() => {
-    setState(state => ({...state, loading: true}));
+    setState(state => ({ ...state, loading: true }));
 
     const unsubscribe = props.firebase.users().onSnapshot(users => {
-      let usersList = [];
+      const usersList = [];
 
       users
         .forEach(doc => {
           usersList.push({
             uid: doc.id,
-            ...doc.data()
+            ...doc.data(),
           });
         });
 
-      setState(state => ({users: usersList, loading: false}));
+      setState(state => ({ users: usersList, loading: false }));
     });
 
-    return () =>
-      unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -44,19 +43,24 @@ const UserList = ({ users }) => (
     {users.map(user => (
       <li key={user.uid}>
         <span>
-          <strong>ID:</strong> {user.uid}
+          <strong>ID:</strong>
+          {' '}
+          {user.uid}
         </span>
         <span>
-          <strong>Email:</strong> {user.email}
+          <strong>Email:</strong>
+          {' '}
+          {user.email}
         </span>
         <span>
-          <strong>Username:</strong> {user.username}
+          <strong>Username:</strong>
+          {' '}
+          {user.username}
         </span>
       </li>
     ))}
   </ul>
-)
-const condition = authUser =>
-  authUser && !!authUser.roles[ROLES.ADMIN];
+);
+const condition = authUser => authUser && !!authUser.roles[ROLES.ADMIN];
 
 export default withFirebase(AdminPage);

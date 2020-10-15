@@ -28,40 +28,35 @@ const SignUpFormBase = props => {
 
     props.firebase
       .createUserWithEmailAndPassword(email, password)
-      .then(authUser => {
-        return props
-                .firebase
-                .user(authUser.user.uid)
-                .set({
-                  username,
-                  email,
-                });
-      })
+      .then(authUser => props
+        .firebase
+        .user(authUser.user.uid)
+        .set({
+          username,
+          email,
+        }))
       .then(() => {
-        setState({ ...INITIAL_STATE })
+        setState({ ...INITIAL_STATE });
         props.history.push(ROUTES.HOME);
       })
-      .catch(error =>
-        setState(
-          state => ({ ...state, error })
-        )
-      );
+      .catch(error => setState(
+        state => ({ ...state, error }),
+      ));
 
     event.preventDefault();
-  }
+  };
 
   const onChange = e => {
     e.persist();
     setState(
-      state => ({ ...state, [e.target.name]: e.target.value })
+      state => ({ ...state, [e.target.name]: e.target.value }),
     );
   };
 
-  const isInvalid =
-    state.password !== state.passwordConfirmation ||
-    !state.password ||
-    !state.email ||
-    !state.username;
+  const isInvalid = state.password !== state.passwordConfirmation
+    || !state.password
+    || !state.email
+    || !state.username;
 
   return (
     <form onSubmit={onSubmit}>
@@ -98,11 +93,13 @@ const SignUpFormBase = props => {
       {state.error && <p>{state.error.message}</p>}
     </form>
   );
-}
+};
 
 const SignUpLink = () => (
   <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+    Don't have an account?
+    {' '}
+    <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
   </p>
 );
 

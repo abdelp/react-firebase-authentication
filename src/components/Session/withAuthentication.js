@@ -4,14 +4,13 @@ import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
 
 const withAuthentication = Component => {
-  const WithAuthentication = (props) => {
-    let [state, setState] = useState({ authUser: null });
+  const WithAuthentication = props => {
+    const [state, setState] = useState({ authUser: null });
     const [listener, setListener] = useState();
 
     useEffect(() => {
       const authListener = props.firebase.auth.onAuthStateChanged(
-        authUser =>
-          setState(state => ({...state, authUser}))
+        authUser => setState(state => ({ ...state, authUser })),
       );
       return () => authListener();
     }, []);

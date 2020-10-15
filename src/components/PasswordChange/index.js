@@ -7,8 +7,8 @@ const INITIAL_STATE = {
   error: null,
 };
 
-const PasswordChangeForm = (props) => {
-  const [state, setState] = useState({...INITIAL_STATE});
+const PasswordChangeForm = props => {
+  const [state, setState] = useState({ ...INITIAL_STATE });
 
   const onSubmit = event => {
     const { password } = state;
@@ -16,22 +16,16 @@ const PasswordChangeForm = (props) => {
     props
       .firebase
       .updatePassword(password)
-      .then(() =>
-        setState(state => ({ ...INITIAL_STATE}))
-      )
-      .catch(error =>
-        setState(state => ({...state, error}))
-      );
+      .then(() => setState(state => ({ ...INITIAL_STATE })))
+      .catch(error => setState(state => ({ ...state, error })));
 
     event.preventDefault();
   };
 
-  const onChange = event =>
-    setState(state => ({...state, [event.target.name]: event.target.value }));
+  const onChange = event => setState(state => ({ ...state, [event.target.name]: event.target.value }));
 
-  const isInvalid =
-    state.password !== state.passwordConfirmation ||
-    !state.password;
+  const isInvalid = state.password !== state.passwordConfirmation
+    || !state.password;
 
   return (
     <form onSubmit={onSubmit}>
@@ -57,5 +51,5 @@ const PasswordChangeForm = (props) => {
     </form>
   );
 };
- 
+
 export default withFirebase(PasswordChangeForm);

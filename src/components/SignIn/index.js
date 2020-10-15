@@ -22,8 +22,8 @@ const INITIAL_STATE = {
   error: null,
 };
 
-const SignInFormBase = (props) => {
-  const [state, setState] = useState({...INITIAL_STATE});
+const SignInFormBase = props => {
+  const [state, setState] = useState({ ...INITIAL_STATE });
 
   const onSubmit = event => {
     const { username, email, password } = state;
@@ -32,26 +32,23 @@ const SignInFormBase = (props) => {
       .firebase
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        setState(state => ({...state, ...INITIAL_STATE}));
+        setState(state => ({ ...state, ...INITIAL_STATE }));
         props.history.push(ROUTES.HOME);
       })
-      .catch(error =>
-        setState(state => ({...state, error }))
-      );
+      .catch(error => setState(state => ({ ...state, error })));
 
     event.preventDefault();
-  }
+  };
 
   const onChange = e => {
     e.persist();
     setState(
-      state => ({ ...state, [e.target.name]: e.target.value })
-    )
-  }
+      state => ({ ...state, [e.target.name]: e.target.value }),
+    );
+  };
 
-  const isInvalid =
-    !state.password ||
-    !state.email;
+  const isInvalid = !state.password
+    || !state.email;
 
   return (
     <form onSubmit={onSubmit}>
@@ -74,7 +71,7 @@ const SignInFormBase = (props) => {
       </button>
       {state.error && <p>{state.error.message}</p>}
     </form>
-  )
+  );
 };
 
 const SignInForm = compose(
