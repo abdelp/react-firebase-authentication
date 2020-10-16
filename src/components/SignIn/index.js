@@ -11,6 +11,8 @@ const SignInPage = () => (
   <div>
     <h1>SignIn</h1>
     <SignInForm />
+    <SignInGoogle />
+    <SignInFacebook />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
@@ -66,9 +68,6 @@ const SignInFormBase = props => {
         type="password"
         placeholder="Password"
       />
-      <button disabled={isInvalid} type="submit">
-        Sign In
-      </button>
       {state.error && <p>{state.error.message}</p>}
     </form>
   );
@@ -79,6 +78,67 @@ const SignInForm = compose(
   withFirebase,
 )(SignInFormBase);
 
+const SignInGoogleBase = props => {
+  const [state, setState] = useState({error: null});
+
+  const onSubmit = event => {
+    props
+      .firebase
+      .signInWithGoogle()
+      .then(socialAuthUser => {
+
+        return props.firebase
+          .user(socialAuthUser.user.uid)
+          .set({
+            username: socialAuthUser.user.displayName,
+            email: socialAuthUser.user.email,
+            roles: {},
+          });
+      })
+      .then(() => {
+        setState({ error: null });
+        props.history.push(ROUTES.HOME);
+      })
+      .catch(error =>
+        setState({ error })
+      );
+    
+    event.preventDefault();
+  };
+
+  const { error } = state;
+
+  return (
+    <form onSubmit={onSubmit}>
+      <button type="submit">Sign In with Google</button>
+      {error && <p>{error.messsage}</p>}
+    </form>
+  );
+};
+
+const SignInGoogle = compose(
+  withRouter,
+  withFirebase,
+)(SignInGoogleBase);
+
+const SignInFacebookBase = props => {
+  const [state, setState] = useState({error: null});
+
+  const onSubmit = event => {
+    props.firebase
+    .signInWithFacebook()
+    .then(socialAuthUser => {
+      setState({ error: null });
+      props.history.push(ROUTES.HOME);
+    })
+    .catch(error =>
+      setState({ error })
+    );
+
+    event.preventDefault();
+  };
+};
+
 export default SignInPage;
 
-export { SignInForm };
+export { SignInForm, SignInGoogle };
