@@ -1,19 +1,36 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 
-const config = {
-  apiKey: "",
-  authDomain: "",
-  databaseURL: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+import 'firebase/firestore';
+
+const prodConfig = {
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
 };
 
-function Firebase() {
+const devConfig = {
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
+};
+
+const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
+
+const Firebase = () => {
   app.initializeApp(config);
-  let auth = app.auth();
+
+  const auth = app.auth();
+  const db = app.firestore();
+
   let googleProvider = new app.auth.GoogleAuthProvider();
   let facebookProvider = new app.auth.FacebookAuthProvider();
 
@@ -32,6 +49,10 @@ function Firebase() {
   const updatePassword = password =>
     auth.currentUser.updatePassword(password);
 
+  const user = uid => db.collection('/user').doc(uid);
+
+  const users = () => db.collection('/users');
+
   const signInWithGoogle = () =>
     auth.signInWithPopup(googleProvider);
 
@@ -40,12 +61,16 @@ function Firebase() {
 
   return {
     auth,
+    db,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
     resetPassword,
     updatePassword,
-    signInWithGoogle
+    user,
+    users,
+    signInWithGoogle,
+    signInWithFacebook
   }
 }
 

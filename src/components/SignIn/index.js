@@ -136,7 +136,21 @@ const SignInFacebookBase = props => {
 
     event.preventDefault();
   };
+
+  const { error } = state;
+
+  return (
+    <form onSubmit={onSubmit}>
+      <button type="submit">Sign In with Facebook</button>
+      {error && <p>{error.message}</p>}
+    </form>
+  )
 };
+
+const SignInFacebook = compose(
+  withRouter,
+  withFirebase,
+)(SignInFacebookBase);
 
 export default SignInPage;
 
