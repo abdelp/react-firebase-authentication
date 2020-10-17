@@ -1,8 +1,9 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { FirebaseContext, withFirebase } from '../Firebase';
+import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 const SignUpPage = () => (
@@ -97,7 +98,7 @@ const SignUpFormBase = props => {
 
 const SignUpLink = () => (
   <p>
-    Don't have an account?
+    Don&apos;t have an account?
     {' '}
     <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
   </p>
@@ -107,6 +108,18 @@ const SignUpForm = compose(
   withRouter,
   withFirebase,
 )(SignUpFormBase);
+
+SignUpFormBase.propTypes = {
+  firebase: PropTypes.shape({
+    createUserWithEmailAndPassword: PropTypes.func,
+    user: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.arrayOf(PropTypes.string),
+};
+
+SignUpFormBase.defaultProps = {
+  history: [],
+};
 
 export default SignUpPage;
 
