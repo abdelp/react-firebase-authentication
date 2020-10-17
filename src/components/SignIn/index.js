@@ -13,6 +13,7 @@ const SignInPage = () => (
     <SignInForm />
     <SignInGoogle />
     <SignInFacebook />
+    <SignInTwitter />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
@@ -152,6 +153,54 @@ const SignInFacebook = compose(
   withFirebase,
 )(SignInFacebookBase);
 
+const SignInTwitterBase = props => {
+  const [state, setState] = useState({error: null});
+
+  const onSubmit = event => {
+    props.firebase
+    .signInWithTwitter()
+    .then(socialAuthUser => {
+
+      return props.firebase
+      .user(socialAuthUser.user.uid)
+      .set({
+        username: socialAuthUser.additionalUserInfo.profile.name,
+        email: socialAuthUser.additionalUserInfo.profile.email,
+        roles: {},
+      });
+    })
+    .then(() => {
+      setState({ error: null });
+      props.history.push(ROUTES.HOME);
+    })
+    .catch(error => {
+      setState({ error });
+    });
+
+    event.preventDefault();
+  };
+
+  const { error } = state;
+
+  return (
+    <form onSubmit={onSubmit}>
+      <button type="submit">Sign In With Twitter</button>
+
+      {error && <p>{error.message}</p>}
+    </form>
+  );
+};
+
+const SignInTwitter = compose(
+  withRouter,
+  withFirebase,
+)(SignInTwitterBase);
+
 export default SignInPage;
 
-export { SignInForm, SignInGoogle };
+export {
+  SignInForm,
+  SignInGoogle,
+  SignInFacebook,
+  SignInTwitter
+};

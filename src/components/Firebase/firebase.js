@@ -33,6 +33,7 @@ const Firebase = () => {
 
   let googleProvider = new app.auth.GoogleAuthProvider();
   let facebookProvider = new app.auth.FacebookAuthProvider();
+  let twitterProvider = new app.auth.TwitterAuthProvider();
 
   const createUserWithEmailAndPassword = (email, password) =>
     auth.createUserWithEmailAndPassword(email, password);
@@ -59,6 +60,9 @@ const Firebase = () => {
   const signInWithFacebook = () =>
     auth.signInWithPopup(facebookProvider);
 
+  const signInWithTwitter = () =>
+    auth.signInWithPopup(twitterProvider);
+
   return {
     auth,
     db,
@@ -70,7 +74,8 @@ const Firebase = () => {
     user,
     users,
     signInWithGoogle,
-    signInWithFacebook
+    signInWithFacebook,
+    signInWithTwitter
   }
 }
 
