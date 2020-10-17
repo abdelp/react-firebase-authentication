@@ -1,4 +1,5 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { withFirebase } from '../Firebase';
@@ -22,8 +23,6 @@ const PasswordForgetFormBase = props => {
   const onSubmit = event => {
     const { email } = state;
 
-    console.log(props.firebase);
-
     props
       .firebase
       .resetPassword(email)
@@ -33,7 +32,10 @@ const PasswordForgetFormBase = props => {
     event.preventDefault();
   };
 
-  const onChange = event => setState(state => ({ ...state, [event.target.name]: event.target.value }));
+  const onChange = event => setState(state => ({
+    ...state,
+    [event.target.name]: event.target.value,
+  }));
 
   const isInvalid = state.email === '';
 
@@ -59,6 +61,12 @@ const PasswordForgetLink = () => (
     <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
   </p>
 );
+
+PasswordForgetFormBase.propTypes = {
+  firebase: PropTypes.shape({
+    resetPassword: PropTypes.func,
+  }).isRequired,
+};
 
 export default PasswordForgetPage;
 
