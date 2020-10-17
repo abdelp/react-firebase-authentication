@@ -1,4 +1,5 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -29,7 +30,7 @@ const SignInFormBase = props => {
   const [state, setState] = useState({ ...INITIAL_STATE });
 
   const onSubmit = event => {
-    const { username, email, password } = state;
+    const { email, password } = state;
 
     props
       .firebase
@@ -69,6 +70,9 @@ const SignInFormBase = props => {
         type="password"
         placeholder="Password"
       />
+      <button disabled={isInvalid} type="submit">
+        Sign In
+      </button>
       {state.error && <p>{state.error.message}</p>}
     </form>
   );
@@ -80,29 +84,25 @@ const SignInForm = compose(
 )(SignInFormBase);
 
 const SignInGoogleBase = props => {
-  const [state, setState] = useState({error: null});
+  const [state, setState] = useState({ error: null });
 
   const onSubmit = event => {
     props
       .firebase
       .signInWithGoogle()
-      .then(socialAuthUser => {
-        return props.firebase
-          .user(socialAuthUser.user.uid)
-          .set({
-            username: socialAuthUser.user.displayName,
-            email: socialAuthUser.user.email,
-            roles: {},
-          });
-      })
+      .then(socialAuthUser => props.firebase
+        .user(socialAuthUser.user.uid)
+        .set({
+          username: socialAuthUser.user.displayName,
+          email: socialAuthUser.user.email,
+          roles: {},
+        }))
       .then(() => {
         setState({ error: null });
         props.history.push(ROUTES.HOME);
       })
-      .catch(error =>
-        setState({ error })
-      );
-    
+      .catch(error => setState({ error }));
+
     event.preventDefault();
   };
 
@@ -122,18 +122,16 @@ const SignInGoogle = compose(
 )(SignInGoogleBase);
 
 const SignInFacebookBase = props => {
-  const [state, setState] = useState({error: null});
+  const [state, setState] = useState({ error: null });
 
   const onSubmit = event => {
     props.firebase
-    .signInWithFacebook()
-    .then(socialAuthUser => {
-      setState({ error: null });
-      props.history.push(ROUTES.HOME);
-    })
-    .catch(error =>
-      setState({ error })
-    );
+      .signInWithFacebook()
+      .then(() => {
+        setState({ error: null });
+        props.history.push(ROUTES.HOME);
+      })
+      .catch(error => setState({ error }));
 
     event.preventDefault();
   };
@@ -145,7 +143,7 @@ const SignInFacebookBase = props => {
       <button type="submit">Sign In with Facebook</button>
       {error && <p>{error.message}</p>}
     </form>
-  )
+  );
 };
 
 const SignInFacebook = compose(
@@ -154,28 +152,25 @@ const SignInFacebook = compose(
 )(SignInFacebookBase);
 
 const SignInTwitterBase = props => {
-  const [state, setState] = useState({error: null});
+  const [state, setState] = useState({ error: null });
 
   const onSubmit = event => {
     props.firebase
-    .signInWithTwitter()
-    .then(socialAuthUser => {
-
-      return props.firebase
-      .user(socialAuthUser.user.uid)
-      .set({
-        username: socialAuthUser.additionalUserInfo.profile.name,
-        email: socialAuthUser.additionalUserInfo.profile.email,
-        roles: {},
+      .signInWithTwitter()
+      .then(socialAuthUser => props.firebase
+        .user(socialAuthUser.user.uid)
+        .set({
+          username: socialAuthUser.additionalUserInfo.profile.name,
+          email: socialAuthUser.additionalUserInfo.profile.email || 'test@test.com',
+          roles: {},
+        }))
+      .then(() => {
+        setState({ error: null });
+        props.history.push(ROUTES.HOME);
+      })
+      .catch(error => {
+        setState({ error });
       });
-    })
-    .then(() => {
-      setState({ error: null });
-      props.history.push(ROUTES.HOME);
-    })
-    .catch(error => {
-      setState({ error });
-    });
 
     event.preventDefault();
   };
@@ -196,11 +191,65 @@ const SignInTwitter = compose(
   withFirebase,
 )(SignInTwitterBase);
 
+SignInFormBase.propTypes = {
+  firebase: PropTypes.shape({
+    signInWithEmailAndPassword: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
+
+SignInFormBase.defaultProps = {
+  history: {},
+};
+
+SignInGoogleBase.propTypes = {
+  firebase: PropTypes.shape({
+    signInWithGoogle: PropTypes.func,
+    user: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
+
+SignInGoogleBase.defaultProps = {
+  history: {},
+};
+
+SignInFacebookBase.propTypes = {
+  firebase: PropTypes.shape({
+    signInWithFacebook: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
+
+SignInFacebookBase.defaultProps = {
+  history: {},
+};
+
+SignInTwitterBase.propTypes = {
+  firebase: PropTypes.shape({
+    signInWithTwitter: PropTypes.func,
+    user: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
+};
+
+SignInTwitterBase.defaultProps = {
+  history: {},
+};
+
 export default SignInPage;
 
 export {
   SignInForm,
   SignInGoogle,
   SignInFacebook,
-  SignInTwitter
+  SignInTwitter,
 };
