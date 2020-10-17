@@ -1,4 +1,5 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { withFirebase } from '../Firebase';
 
 const INITIAL_STATE = {
@@ -16,13 +17,16 @@ const PasswordChangeForm = props => {
     props
       .firebase
       .updatePassword(password)
-      .then(() => setState(state => ({ ...INITIAL_STATE })))
+      .then(() => setState(() => ({ ...INITIAL_STATE })))
       .catch(error => setState(state => ({ ...state, error })));
 
     event.preventDefault();
   };
 
-  const onChange = event => setState(state => ({ ...state, [event.target.name]: event.target.value }));
+  const onChange = event => setState(state => ({
+    ...state,
+    [event.target.name]: event.target.value,
+  }));
 
   const isInvalid = state.password !== state.passwordConfirmation
     || !state.password;
@@ -50,6 +54,12 @@ const PasswordChangeForm = props => {
       {state.error && <p>{state.error.message}</p>}
     </form>
   );
+};
+
+PasswordChangeForm.propTypes = {
+  firebase: PropTypes.shape({
+    updatePassword: PropTypes.func,
+  }).isRequired,
 };
 
 export default withFirebase(PasswordChangeForm);
