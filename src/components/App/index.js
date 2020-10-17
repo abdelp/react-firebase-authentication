@@ -4,8 +4,6 @@ import {
   Route,
 } from 'react-router-dom';
 
-import { defaultProps } from 'recompose';
-import { auth } from 'firebase';
 import Navigation from '../Navigation';
 import LandingPage from '../Landing';
 import SignUpPage from '../SignUp';
@@ -17,8 +15,6 @@ import AdminPage from '../Admin';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
-import { withFirebase } from '../Firebase';
-import { AuthUserContext } from '../Session'; // ??
 
 const App = () => (
   <Router>
