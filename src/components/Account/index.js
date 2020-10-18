@@ -8,6 +8,7 @@ import {
 } from '../Session';
 import { PasswordForgetForm } from '../PasswordForget';
 import PasswordChangeForm from '../PasswordChange';
+import LoginManagement from '../LoginManagement';
 
 const AccountPage = () => (
   <AuthUserContext.Consumer>
@@ -19,6 +20,7 @@ const AccountPage = () => (
         </h1>
         <PasswordForgetForm />
         <PasswordChangeForm />
+        <LoginManagement authUser={authUser} />
       </div>
     )}
   </AuthUserContext.Consumer>
