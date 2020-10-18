@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -22,6 +23,21 @@ const withAuthorization = condition => Component => {
         {authUser => (condition(authUser) ? <Component {...props} /> : null)}
       </AuthUserContext.Consumer>
     );
+  };
+
+  WithAuthorization.propTypes = {
+    firebase: PropTypes.shape({
+      auth: PropTypes.shape({
+        onAuthStateChanged: PropTypes.func,
+      }),
+    }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func,
+    }),
+  };
+
+  WithAuthorization.defaultProps = {
+    history: {},
   };
 
   return compose(
