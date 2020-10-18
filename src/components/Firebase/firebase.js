@@ -1,26 +1,25 @@
 import app from 'firebase/app';
 import 'firebase/auth';
-
 import 'firebase/firestore';
 
 const prodConfig = {
-  apiKey: 'AIzaSyCjyX0zYlrsNTaKrn1UhJEi7ec9DJzKc1g',
-  authDomain: 'javascript-capstone.firebaseapp.com',
-  databaseURL: 'https://javascript-capstone.firebaseio.com',
-  projectId: 'javascript-capstone',
-  storageBucket: 'javascript-capstone.appspot.com',
-  messagingSenderId: '18817737455',
-  appId: '1:18817737455:web:d609927741e48198ee311a',
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
 };
 
 const devConfig = {
-  apiKey: 'AIzaSyCjyX0zYlrsNTaKrn1UhJEi7ec9DJzKc1g',
-  authDomain: 'javascript-capstone.firebaseapp.com',
-  databaseURL: 'https://javascript-capstone.firebaseio.com',
-  projectId: 'javascript-capstone',
-  storageBucket: 'javascript-capstone.appspot.com',
-  messagingSenderId: '18817737455',
-  appId: '1:18817737455:web:d609927741e48198ee311a',
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
 };
 
 const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
@@ -38,8 +37,19 @@ const Firebase = () => {
   const createUserWithEmailAndPassword = (email, password) => auth
     .createUserWithEmailAndPassword(email, password);
 
+  const sendEmailVerification = () => auth
+    .currentUser.sendEmailVerification({
+      url: "http://localhost:3000",
+    });
+
   const signInWithEmailAndPassword = (email, password) => auth
     .signInWithEmailAndPassword(email, password);
+
+  const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
+
+  const signInWithFacebook = () => auth.signInWithPopup(facebookProvider);
+
+  const signInWithTwitter = () => auth.signInWithPopup(twitterProvider);
 
   const signOut = () => auth.signOut();
 
@@ -47,15 +57,40 @@ const Firebase = () => {
 
   const updatePassword = password => auth.currentUser.updatePassword(password);
 
-  const user = uid => db.collection('/user').doc(uid);
+  const user = uid => db.collection('/users').doc(uid);
 
   const users = () => db.collection('/users');
 
-  const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
+  const onAuthUserListener = (next, fallback) => auth
+    .onAuthStateChanged(authUser => {
+      if (authUser) {
+        user(authUser.uid)
+          .get()
+          .then(doc => {
+            if (doc.exists) {
+              const dbUser = doc.data();
 
-  const signInWithFacebook = () => auth.signInWithPopup(facebookProvider);
+              if (!dbUser.roles) {
+                dbUser.roles = {};
+              }
 
-  const signInWithTwitter = () => auth.signInWithPopup(twitterProvider);
+              const userData = {
+                uid: authUser.uid,
+                email: authUser.email,
+                emailVerified: authUser.emailVerified,
+                providerData: authUser.providerData,
+                ...dbUser,
+              };
+
+              next(userData);
+            } else {
+              console.log('No such document');
+            }
+          });
+      } else {
+        fallback();
+      }
+    });
 
   return {
     auth,
@@ -70,6 +105,8 @@ const Firebase = () => {
     signInWithGoogle,
     signInWithFacebook,
     signInWithTwitter,
+    sendEmailVerification,
+    onAuthUserListener,
   };
 };
 
