@@ -36,6 +36,7 @@ const SignUpFormBase = props => {
           username,
           email,
         }))
+      .then(() => props.firebase.sendEmailVerification())
       .then(() => {
         setState({ ...INITIAL_STATE });
         props.history.push(ROUTES.HOME);
@@ -112,13 +113,16 @@ const SignUpForm = compose(
 SignUpFormBase.propTypes = {
   firebase: PropTypes.shape({
     createUserWithEmailAndPassword: PropTypes.func,
+    sendEmailVerification: PropTypes.func,
     user: PropTypes.func,
   }).isRequired,
-  history: PropTypes.arrayOf(PropTypes.string),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 };
 
 SignUpFormBase.defaultProps = {
-  history: [],
+  history: {},
 };
 
 export default SignUpPage;
