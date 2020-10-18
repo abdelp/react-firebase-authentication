@@ -95,7 +95,6 @@ const SignInGoogleBase = props => {
         .set({
           username: socialAuthUser.user.displayName,
           email: socialAuthUser.user.email,
-          roles: {},
         }))
       .then(() => {
         setState({ error: null });
@@ -129,7 +128,6 @@ const SignInFacebookBase = props => {
         .user(socialAuthUser.user.uid).set({
           username: socialAuthUser.additionalUserInfo.profile.name,
           email: socialAuthUser.additionalUserInfo.profile.email,
-          roles: {},
         }))
       .then(() => {
         setState({ error: null });
@@ -166,7 +164,6 @@ const SignInTwitterBase = props => {
         .set({
           username: socialAuthUser.additionalUserInfo.profile.name,
           email: socialAuthUser.additionalUserInfo.profile.email || 'test@test.com',
-          roles: {},
         }))
       .then(() => {
         setState(state => ({ ...state, error: null }));
