@@ -39,7 +39,7 @@ const Firebase = () => {
 
   const sendEmailVerification = () => auth
     .currentUser.sendEmailVerification({
-      url: "http://localhost:3000",
+      url: 'http://localhost:3000',
     });
 
   const signInWithEmailAndPassword = (email, password) => auth
@@ -62,31 +62,17 @@ const Firebase = () => {
   const users = () => db.collection('/users');
 
   const onAuthUserListener = (next, fallback) => auth
-    .onAuthStateChanged(authUser => {
+    .onAuthStateChanged(async authUser => {
       if (authUser) {
-        user(authUser.uid)
-          .get()
-          .then(doc => {
-            if (doc.exists) {
-              const dbUser = doc.data();
+        const doc = await user(authUser.uid).get();
+        let dbUser = {};
 
-              if (!dbUser.roles) {
-                dbUser.roles = {};
-              }
+        if (doc.exists) {
+          dbUser = doc.data();
+          dbUser.roles = dbUser.roles || {};
+        }
 
-              const userData = {
-                uid: authUser.uid,
-                email: authUser.email,
-                emailVerified: authUser.emailVerified,
-                providerData: authUser.providerData,
-                ...dbUser,
-              };
-
-              next(userData);
-            } else {
-              console.log('No such document');
-            }
-          });
+        next({ ...authUser, ...dbUser });
       } else {
         fallback();
       }
