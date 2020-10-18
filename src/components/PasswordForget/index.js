@@ -32,10 +32,13 @@ const PasswordForgetFormBase = props => {
     event.preventDefault();
   };
 
-  const onChange = event => setState(state => ({
-    ...state,
-    [event.target.name]: event.target.value,
-  }));
+  const onChange = event => {
+    event.persist();
+    setState(state => ({
+      ...state,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
   const isInvalid = state.email === '';
 
