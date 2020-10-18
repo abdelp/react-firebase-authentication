@@ -95,7 +95,7 @@ const SignInGoogleBase = props => {
         .set({
           username: socialAuthUser.user.displayName,
           email: socialAuthUser.user.email,
-        }))
+        }, { merge: true }))
       .then(() => {
         setState({ error: null });
         props.history.push(ROUTES.HOME);
