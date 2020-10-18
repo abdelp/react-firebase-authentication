@@ -27,6 +27,7 @@ const config = process.env.NODE_ENV === 'production' ? prodConfig : devConfig;
 const Firebase = () => {
   app.initializeApp(config);
 
+  const emailAuthProvider = app.auth.EmailAuthProvider;
   const auth = app.auth();
   const db = app.firestore();
 
@@ -69,9 +70,9 @@ const Firebase = () => {
 
         if (doc.exists) {
           dbUser = doc.data();
-          dbUser.roles = dbUser.roles || {};
         }
 
+        dbUser.roles = dbUser.roles || {};
         next({ ...authUser, ...dbUser });
       } else {
         fallback();
@@ -81,6 +82,10 @@ const Firebase = () => {
   return {
     auth,
     db,
+    emailAuthProvider,
+    googleProvider,
+    facebookProvider,
+    twitterProvider,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
