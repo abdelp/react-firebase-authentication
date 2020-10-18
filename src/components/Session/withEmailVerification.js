@@ -46,8 +46,8 @@ const withEmailVerification = Component => {
 
   WithEmailVerification.propTypes = {
     firebase: PropTypes.shape({
-      sendEmailVerification: PropTypes.func
-    }).isRequired
+      sendEmailVerification: PropTypes.func,
+    }).isRequired,
   };
 
   return withFirebase(WithEmailVerification);
