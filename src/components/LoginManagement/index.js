@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { withFirebase } from '../Firebase';
 
 import DefaultLoginToggle from '../DefaultLoginToggle';
@@ -101,6 +102,25 @@ const LoginManagement = props => {
       {state.error && state.error.message}
     </>
   );
+};
+
+LoginManagement.propTypes = {
+  firebase: PropTypes.shape({
+    auth: PropTypes.shape({
+      fetchSignInMethodsForEmail: PropTypes.func,
+      currentUser: PropTypes.shape({
+        linkWithPopup: PropTypes.func,
+        unlink: PropTypes.func,
+        linkAndRetrieveDataWithCredential: PropTypes.func,
+      }),
+    }),
+    emailAuthProvider: PropTypes.shape({
+      credential: PropTypes.func,
+    }),
+  }).isRequired,
+  authUser: PropTypes.shape({
+    email: PropTypes.string,
+  }).isRequired,
 };
 
 export default withFirebase(LoginManagement);
