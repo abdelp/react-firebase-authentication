@@ -114,9 +114,7 @@ LoginManagement.propTypes = {
         linkAndRetrieveDataWithCredential: PropTypes.func,
       }),
     }),
-    emailAuthProvider: PropTypes.shape({
-      credential: PropTypes.func,
-    }),
+    emailAuthProvider: PropTypes.func,
   }).isRequired,
   authUser: PropTypes.shape({
     email: PropTypes.string,
