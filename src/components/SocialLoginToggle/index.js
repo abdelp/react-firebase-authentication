@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const SocialLoginToggle = ({
   onlyOneLeft,
@@ -25,5 +26,21 @@ const SocialLoginToggle = ({
     {signInMethod.id}
   </button>
 ));
+
+SocialLoginToggle.propTypes = {
+  onlyOneLeft: PropTypes.bool,
+  isEnabled: PropTypes.bool,
+  signInMethod: PropTypes.shape({
+    id: PropTypes.string,
+    provider: PropTypes.string,
+  }).isRequired,
+  onLink: PropTypes.func.isRequired,
+  onUnlink: PropTypes.func.isRequired,
+};
+
+SocialLoginToggle.defaultProps = {
+  onlyOneLeft: false,
+  isEnabled: false,
+};
 
 export default SocialLoginToggle;
