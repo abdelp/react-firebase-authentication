@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const DefaultLoginToggle = props => {
   const [state, setState] = useState({
@@ -77,6 +78,21 @@ const DefaultLoginToggle = props => {
       )}
     </>
   );
+};
+
+DefaultLoginToggle.propTypes = {
+  onLink: PropTypes.func.isRequired,
+  onlyOneLeft: PropTypes.bool,
+  isEnabled: PropTypes.bool,
+  signInMethod: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
+  onUnlink: PropTypes.func.isRequired,
+};
+
+DefaultLoginToggle.defaultProps = {
+  onlyOneLeft: false,
+  isEnabled: false,
 };
 
 export default DefaultLoginToggle;
