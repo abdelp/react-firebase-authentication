@@ -4,6 +4,8 @@ import {
   Route,
 } from 'react-router-dom';
 
+import Container from 'react-bootstrap/Container';
+
 import Navigation from '../Navigation';
 import LandingPage from '../Landing';
 import SignUpPage from '../SignUp';
@@ -18,7 +20,7 @@ import { withAuthentication } from '../Session';
 
 const App = () => (
   <Router>
-    <div>
+    <Container>
       <Navigation />
       <hr />
 
@@ -29,7 +31,7 @@ const App = () => (
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
-    </div>
+    </Container>
   </Router>
 );
 
